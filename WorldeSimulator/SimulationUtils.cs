@@ -50,8 +50,8 @@ public class Feedback
 /// </summary>
 public struct GuessLogEntry
 {
-    public string Guess;   // The guessed word.
-    public int Remaining;  // The number of remaining possible words.
+    public string Guess { get; set; }   // The guessed word.
+    public int Remaining { get; set; }  // The number of remaining possible words.
 
     /// <summary>
     /// Initializes a new instance of the GuessLogEntry struct.
@@ -425,7 +425,7 @@ public static class SimulationUtils
 
         while (true)
         {
-            if (attempts >= 12 || possible.Count == 0)
+            if (attempts >= 1000 || possible.Count == 0)
                 return new SimulationResult(null, log);
 
             string bestGuess = null;

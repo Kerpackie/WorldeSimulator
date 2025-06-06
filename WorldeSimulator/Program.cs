@@ -20,12 +20,12 @@ class SummaryEntry
     }
 }
 
-class DetailedLog
+public class DetailedLog
 {
-    public string Word;
-    public bool Solved;
-    public int? Attempts;
-    public List<GuessLogEntry> GuessLog;
+    public string Word { get; set; }
+    public bool Solved { get; set; }
+    public int? Attempts { get; set; }
+    public List<GuessLogEntry> GuessLog { get; set; }
 
     public DetailedLog(string word, bool solved, int? attempts, List<GuessLogEntry> guessLog)
     {
@@ -61,11 +61,12 @@ class Program
         List<int> results = new List<int>();
         List<string> failed = new List<string>();
 
-        int testLimit = 100;
+//        int testLimit = 1;
+        int testLimit = wordList.Count; 
         for (int i = 0; i < testLimit && i < wordList.Count; i++)
         {
             string word = wordList[i];
-            Console.WriteLine("Testing " + word + "...");
+            Console.WriteLine("Testing " + word + "..." + (i + 1) + "/" + testLimit);
 
             SimulationResult result = SimulationUtils.SimulateGame(
                 word, wordList, weights, letterProbs, bigramProbs, trigramProbs, posProbs
@@ -88,7 +89,7 @@ class Program
         }
 
         // Write CSV
-        using (var writer = new StreamWriter("wordle_summary.csv"))
+        using (var writer = new StreamWriter("data/wordle_summary.csv"))
         {
             writer.WriteLine("word,attempts,solved");
             for (int i = 0; i < summary.Count; i++)
@@ -99,9 +100,13 @@ class Program
         }
 
         // Write JSON
-        var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
+        var jsonOptions = new JsonSerializerOptions
+        {
+            WriteIndented = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
         string json = JsonSerializer.Serialize(detailedLogs, jsonOptions);
-        File.WriteAllText("wordle_detailed_logs.json", json);
+        File.WriteAllText("data/wordle_detailed_logs.json", json);
 
         Console.WriteLine("Done! Results written to wordle_summary.csv and wordle_detailed_logs.json");
     }
